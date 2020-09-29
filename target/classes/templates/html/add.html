@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/easyui/themes/bootstrap/easyui.css}">
+    <link rel="stylesheet" th:href="@{/easyui/themes/icon.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+
+<div class="modal-body">
+
+    <div class="col-sm-8">
+        <input type="text" class="form-control" name="name"  id="name" placeholder="new name" />
+    </div>
+
+    <select name="dept" id="dept">
+        <option th:each="str : ${depts}" th:value="${str.getDid()}">[[${str.getDname()}]]</option>
+    </select>
+
+<button type="button" name="add" onclick="add()" class="btn btn-primary">添加</button>
+</div>
+</body>
+<script th:src="@{/easyui/jquery.min.js}"></script>
+<script th:src="@{/easyui/jquery.easyui.min.js}"></script>
+<script th:src="@{/easyui/locale/easyui-lang-zh_CN.js}"></script>
+<script>
+
+    function add() {
+
+        var did =$("[name=dept] option:selected").val()
+        alert(did)
+         $.ajax({
+            url:'goadd',
+            type:'post',
+            data:{
+                name:$('#name').val(),
+                did:did,
+            },
+            dataType:'json',
+            success:function (data) {
+
+                alert("添加成功")
+                window.location = 'index'
+            }
+
+        })
+    }
+
+</script>
+
+</html>

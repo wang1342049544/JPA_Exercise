@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/easyui/themes/bootstrap/easyui.css}">
+    <link rel="stylesheet" th:href="@{/easyui/themes/icon.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+
+
+<div class="modal-body">
+
+    <select name="dept" id="dept">
+        <option th:each="str : ${depts}" th:value="${str.getDid()}">[[${str.getDname()}]]</option>
+    </select>
+
+    <div class="col-sm-8">
+        <input type="text" class="form-control"  th:value="${entity.getId()}" id="idd" placeholder="new name" />
+        <input type="text" class="form-control" name="name" th:value="${entity.getName()}" id="name" placeholder="new name" />
+    </div>
+
+    <button type="button" name="add" onclick="xiu()" class="btn btn-primary">修改</button>
+</div>
+
+
+
+
+</body>
+<script th:src="@{/easyui/jquery.min.js}"></script>
+<script th:src="@{/easyui/jquery.easyui.min.js}"></script>
+<script th:src="@{/easyui/locale/easyui-lang-zh_CN.js}"></script>
+
+
+<script>
+
+    function xiu() {
+     var  name = $('#name').val();
+     var  idd  = $('#idd').val();
+        var did =$("[name=dept] option:selected").val();
+        $.ajax({
+            url:'update',
+            type:'post',
+            data:{
+                name:name,
+                id:idd,
+                did:did
+            },
+            dataType:'json',
+            success:function (data) {
+                    alert("修改成功")
+                    window.location = 'index'
+
+
+            }
+
+        })
+    }
+
+
+
+</script>
+</html>

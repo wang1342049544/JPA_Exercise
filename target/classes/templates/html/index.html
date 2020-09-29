@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+
+    <link rel="stylesheet" th:href="@{/easyui/themes/bootstrap/easyui.css}">
+    <link rel="stylesheet" th:href="@{/easyui/themes/icon.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container">
+
+
+    <input type="text" name="name" id="name">
+    <select name="dept" id="dept">
+        <option value="">全部</option>
+        <option th:each="str : ${depts}" th:value="${str.getDid()}">[[${str.getDname()}]]</option>
+    </select>
+
+
+
+    <a href="javascript:;" class="easyui-linkbutton" onclick="cha()" data-options="iconCls:'icon-search'"></a>
+    <button onclick="add()" class="btn btn-primary"  id="tianjia"><span class="glyphicon glyphicon-plus"></span>增加</button>
+<div class="row">
+    <div class="col-md-12">
+        <table id="tbl_emp"></table>
+    </div>
+</div>
+</div>
+</body>
+<script th:src="@{/easyui/jquery.min.js}"></script>
+<script th:src="@{/easyui/jquery.easyui.min.js}"></script>
+<script th:src="@{/easyui/locale/easyui-lang-zh_CN.js}"></script>
+<script>
+
+
+
+
+    function cha(){
+        console.log($("[name=dept] option:selected").val())
+        console.log($("#dept option:selected").val())
+        $("#tbl_emp").datagrid('reload',{
+            did:$("[name=dept] option:selected").val(),
+            name:$('#name').val(),
+        });
+    }
+
+
+    /**
+     * 分页查询
+     */
+    $("#tbl_emp").datagrid({
+        url:"list",
+        fitColumns:true,
+        method:"post",
+        pagination:true,
+        pageNumber:1,
+        pageSize:10,
+        pageList:[1,2,5,8,10],
+        columns:[
+            [
+                {   title:"编号",
+                    field:"id",
+                    align:'center'
+                },
+                    {title:"登录名",
+                    field:"name",
+                    align:'center'
+                    },
+                {
+                    title:"部门",
+                    field:"tbl_department",formatter:function(value,row,index){
+                        return row.tbl_department.dname;
+                    }
+                    },
+
+                {
+                    title: "操作",
+                    field: 'center',
+                    formatter: function (value, row, index) {
+
+                        return " <button  onclick='update("+row.id+")'  class='btn btn-info'>修改 </button>"+
+                            "  \n" +
+                            "   <button   class='btn btn-info' onclick='dele("+row.id+")'>删 除 </button> &nbsp;";
+
+                    }
+                }
+            ]
+
+        ]
+
+
+    });
+
+/**
+ * 跳转增加页面
+ */
+
+   function add() {
+       alert("欢迎来到增加页面")
+       location.href = "add";
+/*       window.location = 'add';*/
+   }
+
+
+    /**
+     * 删除
+     */
+   function dele(id) {
+       id =id
+     alert(id)
+      $.ajax({
+            url:'delete',
+            type:'post',
+            data:{
+                id:id,
+            },
+            dataType:'json',
+            success:function (data) {
+                data.id=id;
+                alert("删除成功")
+               window.location = 'index'
+            }
+
+        })
+    }
+
+
+
+    /**
+     * 修改
+     */
+
+    function update(id,name) {
+       id =id
+
+        alert(id)
+        alert("欢迎来到修改页面")
+        window.location = 'doupdate?id='+id+'';
+    }
+</script>
+
+
+</html>
